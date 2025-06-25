@@ -1,0 +1,72 @@
+@use './Variables' as *;
+
+@mixin Fullscreen {
+    min-height: 100vh;
+    min-width: 100vw;
+}
+
+@mixin Fitscreen {
+    height: 100%;
+    width: 100%;
+}
+
+@mixin Flex($dir, $align) {
+    display: flex;
+
+    @if $dir =="Col" {
+        flex-direction: column;
+
+        @if $align =="Vertical" {
+            justify-content: center;
+        }
+
+        @else if $align =="Horizontal" {
+            align-items: center;
+        }
+
+        @else {
+            justify-content: center;
+            align-items: center;
+        }
+    }
+
+    @else {
+        @if $align =="Vertical" {
+            align-items: center;
+        }
+
+        @else if $align =="Horizontal" {
+            justify-content: center;
+        }
+
+        @else {
+            justify-content: center;
+            align-items: center;
+        }
+    }
+}
+
+@mixin whenSmall() {
+    @media screen and (max-width: $breakpoint) {
+        @content
+    }
+}
+
+@mixin whenBig() {
+    @media screen and (min-width: $breakpoint) {
+        @content
+    }
+}
+
+@mixin HoverScale() {
+    transition: $transition;
+    cursor: pointer;
+
+    &:hover {
+        transform: $hover-scale;
+    }
+
+    &>* {
+        cursor: pointer;
+    }
+}

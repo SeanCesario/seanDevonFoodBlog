@@ -1,0 +1,127 @@
+@use '../abstracts' as *;
+
+*,
+*::after,
+*::before {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font: inherit;
+}
+
+html {
+    overflow-y: overlay;
+    overflow-x: hidden;
+    scroll-snap-type: y proximity;
+}
+
+html,
+body {
+    scroll-behavior: smooth;
+    background-color: transparent;
+    margin: 0px;
+    padding: 0px;
+    width: 100vw;
+    height: 100vh
+}
+
+//base
+a {
+    text-decoration: none;
+    color: inherit;
+    @include HoverScale();
+
+}
+
+button {
+    border-radius: 2rem;
+    padding: 1rem;
+    background-color: red;
+    @include HoverScale();
+}
+
+// .clickable {
+//     cursor: pointer;
+// }
+
+// .hover {
+//     @include HoverScale()
+// }
+
+// b {
+//     font-weight: bold;
+// }
+
+// .contentWrapper {
+//     height: 100vh;
+//     display: flex;
+
+//     /* Direction of the items, can be row or column */
+//     flex-direction: column;
+// }
+
+// .content {
+//     flex: 1;
+// }
+
+// .app-root {
+//     @include Fullscreen();
+//     @include Flex("Col", "Horizontal");
+// }
+
+// .centered {
+//     @include Fullscreen();
+//     @include Flex("Col", "Both");
+// }
+
+// .col-centered {
+//     @include Flex("Col", "Center");
+// }
+
+// .row-centered {
+//     @include Flex("Row", "Center");
+// }
+
+// .hideWhenBig {
+//     @include whenBig() {
+//         display: none !important;
+//         visibility: hidden !important;
+//     }
+// }
+
+// .hideWhenSmall {
+//     @include whenSmall() {
+//         display: none !important;
+//         visibility: hidden !important;
+//     }
+// }
+
+//Custom Scrollbar
+::-webkit-scrollbar {
+    width: 20px;
+    position: fixed;
+    display: block;
+}
+
+::-webkit-scrollbar-track {
+    background-color: transparent;
+}
+
+*::-webkit-scrollbar-track-piece {
+    background-color: transparent;
+}
+
+*::-webkit-scrollbar-button {
+    display: none;
+}
+
+::-webkit-scrollbar-thumb {
+    background-color: rgba(157, 157, 157, 0.4);
+    border-radius: 20px;
+    border: 7px solid transparent;
+    background-clip: content-box;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background-color: rgba(157, 157, 157, 0.6);
+}

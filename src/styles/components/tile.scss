@@ -1,0 +1,9 @@
+@use '../abstracts' as *;
+
+.tile {
+    border-radius: 2rem;
+    padding: 2rem;
+    cursor: pointer;
+    @include HoverScale();
+    box-shadow: rgba(0, 0, 0, 0.2) 0px 5px 15px;
+}
