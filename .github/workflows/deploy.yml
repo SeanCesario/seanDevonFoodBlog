@@ -1,4 +1,4 @@
-name: Deploy to S3 and Invalidate CloudFront
+name: Deploy to S3, Invalidate CloudFront, Upload Media & Sync Metadata
 
 on:
   push:
@@ -14,9 +14,8 @@ jobs:
 
     - name: Build React App
       run: npm install && npm run build
-      
 
-    - name: Upload to S3
+    - name: Upload React App to S3
       uses: jakejarvis/s3-sync-action@master
       with:
         args: --delete
@@ -26,6 +25,7 @@ jobs:
         AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
         AWS_REGION: ${{ secrets.AWS_REGION }}
         SOURCE_DIR: './build'
+
     - name: Invalidate CloudFront Cache
       uses: chetan/invalidate-cloudfront-action@v2
       env:
@@ -34,3 +34,26 @@ jobs:
         AWS_REGION: ${{ secrets.AWS_REGION }}
         AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
         AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+
+    - name: Upload Media Files to S3
+      run: |
+        aws s3 sync ./media s3://sean-devon-food-blog-media/food/ --acl public-read
+      env:
+        AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        AWS_REGION: ${{ secrets.AWS_REGION }}
+
+    - name: Setup Node.js
+      uses: actions/setup-node@v3
+      with:
+        node-version: 18
+
+    - name: Install AWS SDK
+      run: npm install aws-sdk
+
+    - name: Upload Metadata to DynamoDB
+      run: node ./scripts/updateDynamo.js
+      env:
+        AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        AWS_REGION: ${{ secrets.AWS_REGION }}

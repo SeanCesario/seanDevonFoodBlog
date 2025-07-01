@@ -1,0 +1,12 @@
+[
+    {
+        "id": "1",
+        "title": "Pasta",
+        "imageKey": "food/pasta.png"
+    },
+    {
+        "id": "2",
+        "title": "Wallpaper",
+        "imageKey": "assets/wallpaper.jpg"
+    }
+]
