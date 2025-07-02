@@ -12,6 +12,9 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v3
 
+    - name: Generate metadata.json from media filenames
+      run: node scripts/generateMetadata.js
+      
     - name: Build React App
       run: npm install && npm run build
 

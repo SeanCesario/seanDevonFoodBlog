@@ -2,11 +2,11 @@
     {
         "id": "1",
         "title": "Pasta",
-        "imageKey": "food/pasta.png"
+        "imageKey": "pasta.png"
     },
     {
         "id": "2",
         "title": "Wallpaper",
-        "imageKey": "assets/wallpaper.jpg"
+        "imageKey": "wallpaper.jpg"
     }
 ]
