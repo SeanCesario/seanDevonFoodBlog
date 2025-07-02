@@ -1,4 +1,4 @@
-import { use, useEffect } from "react";
+import { useEffect } from "react";
 import Feed from "../components/Feed/Feed";
 import '../styles/styles.scss';
 
