@@ -37,20 +37,22 @@ async function syncDynamoDB() {
             try {
                 await docClient.delete({
                     TableName: TABLE_NAME,
-                    Key: { imageKey: item.imageKey }
+                    Key: { id: item.id } // MUST match the table's key
                 }).promise();
-                console.log(`🗑️ Deleted from DynamoDB: ${item.imageKey}`);
+                console.log(`🗑️ Deleted from DynamoDB: ${item.title}`);
             } catch (err) {
-                console.error(`❌ Failed to delete ${item.imageKey}`, err);
+                console.error(`❌ Failed to delete ${item.title}`, err);
             }
         }
     }
+
 
     // Add/update current items
     for (const item of currentItems) {
         const params = {
             TableName: TABLE_NAME,
             Item: {
+                id: item.id, // This MUST match the table's partition key
                 ...item,
                 imageUrl: BUCKET_URL + item.imageKey
             }
@@ -63,6 +65,7 @@ async function syncDynamoDB() {
             console.error(`❌ Failed: ${item.title}`, err);
         }
     }
+
 }
 
 syncDynamoDB();
