@@ -5,13 +5,51 @@ AWS.config.update({ region: "us-east-1" });
 
 const docClient = new AWS.DynamoDB.DocumentClient();
 const BUCKET_URL = "https://sean-devon-food-blog-media.s3.us-east-1.amazonaws.com/";
+const TABLE_NAME = "media";
 
-const items = JSON.parse(fs.readFileSync("media/metadata.json", "utf8"));
+// Read local metadata
+const currentItems = JSON.parse(fs.readFileSync("media/metadata.json", "utf8"));
+const currentKeys = new Set(currentItems.map((item) => item.imageKey));
 
-async function uploadToDynamoDB() {
-    for (const item of items) {
+async function getAllDynamoItems() {
+    const items = [];
+    let ExclusiveStartKey;
+
+    do {
         const params = {
-            TableName: "media",
+            TableName: TABLE_NAME,
+            ExclusiveStartKey
+        };
+        const data = await docClient.scan(params).promise();
+        items.push(...data.Items);
+        ExclusiveStartKey = data.LastEvaluatedKey;
+    } while (ExclusiveStartKey);
+
+    return items;
+}
+
+async function syncDynamoDB() {
+    const dynamoItems = await getAllDynamoItems();
+
+    // Delete removed entries
+    for (const item of dynamoItems) {
+        if (!currentKeys.has(item.imageKey)) {
+            try {
+                await docClient.delete({
+                    TableName: TABLE_NAME,
+                    Key: { imageKey: item.imageKey }
+                }).promise();
+                console.log(`🗑️ Deleted from DynamoDB: ${item.imageKey}`);
+            } catch (err) {
+                console.error(`❌ Failed to delete ${item.imageKey}`, err);
+            }
+        }
+    }
+
+    // Add/update current items
+    for (const item of currentItems) {
+        const params = {
+            TableName: TABLE_NAME,
             Item: {
                 ...item,
                 imageUrl: BUCKET_URL + item.imageKey
@@ -20,11 +58,11 @@ async function uploadToDynamoDB() {
 
         try {
             await docClient.put(params).promise();
-            console.log(`✅ Uploaded: ${item.title}`);
+            console.log(`✅ Upserted: ${item.title}`);
         } catch (err) {
             console.error(`❌ Failed: ${item.title}`, err);
         }
     }
 }
 
-uploadToDynamoDB();
+syncDynamoDB();
