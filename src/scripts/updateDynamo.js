@@ -11,7 +11,7 @@ const items = JSON.parse(fs.readFileSync("media/metadata.json", "utf8"));
 async function uploadToDynamoDB() {
     for (const item of items) {
         const params = {
-            TableName: "YourDynamoDBTableName",
+            TableName: "media",
             Item: {
                 ...item,
                 imageUrl: BUCKET_URL + item.imageKey
