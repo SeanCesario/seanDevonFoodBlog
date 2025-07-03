@@ -52,8 +52,8 @@ async function syncDynamoDB() {
         const params = {
             TableName: TABLE_NAME,
             Item: {
-                id: item.id + "", // This MUST match the table's partition key
                 ...item,
+                id: String(item.id), // This MUST match the table's partition key
                 imageUrl: BUCKET_URL + item.imageKey
             }
         };
